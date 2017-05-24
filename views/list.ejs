@@ -1,0 +1,86 @@
+<% layout('header') -%>
+
+<div class="container">
+    <div class="row">
+        <div class="page-header">
+            <h1><%= title %></h1>
+        </div>
+        <div class="jumbotron">
+            <!--<p><a href="/board/write" class="btn btn-primary btn-raised">과제 작성</a></p>-->
+            <table class="table table-hover table-striped">
+                <thead>
+                    <tr>
+                        <th class="col-md-2"><h3>번호</h3></th>
+                        <th class="col-md-5"><h3>과제명</h3></th>
+                        <th class="col-md-5"><h3>제출기한</h3></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% for(var i = 0, len = data.length; i < len, item = data[i]; i++){ %>
+                    <tr>
+                        <td><h4><%= max - i %></h4></td>
+                        <% if(login == null){ %>
+                        <td><h5><a href="#" data-toggle="modal" data-target="#member_login"><%= item.subject %></a></h5></td>
+                        <% } else { %>
+                        <td><h5><a href="/board/read/<%= item.idx %>"><%= item.subject %></a></h5></td>
+                        <% } %>
+                        <td><h5><%= item.date %></h5></td>
+                    </tr>
+                    <% } %>
+                </tbody>
+            </table>
+
+            <div class="text-center">
+                <ul class="pagination pagination-lg">
+                    <% if(page > pageSize){ %>
+                    <li><a href="/board/list/1"><i class="material-icons">first_page</i></a></li>
+                    <li><a href="/board/list/<%= startPage-1 %>"><i class="material-icons">chevron_left</i></a></li>
+                    <% }else{ %>
+                    <li class="disabled"><a href="#"><i class="material-icons">first_page</i></a></li>
+                    <li class="disabled"><a href="#"><i class="material-icons">chevron_left</i></a></li>
+                    <% } %>
+                    <% for(var i = startPage; i <= endPage; i++){ %>
+                        <% if ( i == page ){ %>
+                        <li class="active"><a href="#"><%= i %></a></li>
+                        <% } else { %>
+                        <li><a href="/board/list/<%= i %>"><%= i %></a></li>
+                        <% } %>
+                    <% } %>
+                    <% if(endPage < totalPage){ %>
+                    <li><a href="/board/list/<%= endPage+1 %>"><i class="material-icons">chevron_right</i></a></li>
+                    <li><a href="/board/list/<%= totalPage %>"><i class="material-icons">last_page</i></a></li>
+                    <% }else{ %>
+                    <li class="disabled"><a href="#"><i class="material-icons">chevron_right</i></a></li>
+                    <li class="disabled"><a href="#"><i class="material-icons">last_page</i></a></li>
+                    <% } %>
+                </ul>
+            </div>
+
+            <!--<div class="table">-->
+                <!--<% if(page > pageSize){ %>-->
+                <!--[ <a href="/board/list/1">처음</a> ]-->
+                <!--[ <a href="/board/list/<%= startPage-1 %>" 이전</a> ]-->
+                <!--<% }else{ %>-->
+                <!--[ <span style="color: gray">처음</span> ]-->
+                <!--[ <span style="color: gray">이전</span> ]-->
+                <!--<% } %>-->
+                <!--&nbsp;&nbsp;-->
+                <!--<% for(var i = startPage; i <= endPage; i++){ %>-->
+                    <!--<% if ( i == page ){ %>-->
+                    <!--[ <%= i %> ]-->
+                    <!--<% } else { %>-->
+                    <!--[ <a href="/board/list/<%= i %>"><%= i %></a> ]-->
+                    <!--<% } %>-->
+                <!--<% } %>-->
+                <!--&nbsp;&nbsp;-->
+                <!--<% if(endPage < totalPage){ %>-->
+                <!--[ <a href="/board/list/<%= endPage+1 %>">다음</a> ]-->
+                <!--[ <a href="/board/list/<%= totalPage %>">마지막</a> ]-->
+                <!--<% }else{ %>-->
+                <!--[ <span style="color: gray;">다음</span> ]-->
+                <!--[ <span style="color: gray;">마지막</span> ]-->
+                <!--<% } %>-->
+            <!--</div>-->
+        </div>
+    </div>
+</div>

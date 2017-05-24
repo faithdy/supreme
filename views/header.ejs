@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title><%= title %></title>
+
+    <!-- Mobile support -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Material Design fonts -->
+    <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Roboto:300,400,500,700" type="text/css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+    <!-- Materialized CSS -->
+    <!--<link type="text/css" rel="stylesheet" href="/css/materialize.min.css"  media="screen,projection"/>-->
+
+    <!-- Bootstrap -->
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Bootstrap Material Design -->
+    <link href="/css/bootstrap-material-design.min.css" rel="stylesheet">
+    <link href="/css/ripples.min.css" rel="stylesheet">
+
+    <!-- Latest compiled and minified CSS -->
+    <!--<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.10.0/css/bootstrap-select.min.css">-->
+
+    <!--Highlight.js-->
+    <!--<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.6.0/styles/default.min.css">-->
+
+    <!-- Angular Material style sheet -->
+    <link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/angular_material/1.1.0/angular-material.min.css">
+
+    <!--Date Range Picker-->
+    <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.css" />
+
+    <!--Native CSS-->
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+
+    <!--jQuery-->
+    <!--<script src="https://code.jquery.com/jquery-3.1.0.min.js"></script>-->
+    <script src="//code.jquery.com/jquery-2.2.4.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.15.1/jquery.validate.min.js"></script>
+</head>
+
+<!--Navbar Area-->
+<body>
+<nav class="navbar navbar-default navbar-sticky-top" role="navigation">
+    <div class="container-fluid">
+        <div class="nav navbar-header">
+            <a class="navbar-brand navbar-btn" href="/board">자동채점</a>
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-responsive-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+        </div>
+        <!--style="padding-bottom:0;text-align: center;left: 50%;transform: translateX(-50%);"-->
+        <div class="navbar-collapse collapse navbar-responsive-collapse">
+            <ul class="nav navbar-nav">
+                <% if(sess.username){ %>
+                <li><a href="/board/write" class="navbar-btn btn"><i class="material-icons">edit</i> 글쓰기</a></li>
+                <% }else{ %>
+                <li><a href="#" class="navbar-btn btn" data-toggle="modal" data-target="#member_login"><i class="material-icons">edit</i> 글쓰기</a> </li>
+                <% } %>
+                <li><a href="/board/list" class="navbar-btn btn"><i class="material-icons">list</i> 목록</a></li>
+            </ul>
+
+            <form class="navbar-form navbar-left">
+                <div class="form-group">
+                    <input type="hidden" class="form-control">
+                </div>
+            </form>
+
+            <ul class="nav navbar-nav navbar-right">
+                <% if (sess.perm) {%>
+                <li><a href="/board/member" class="navbar-btn well well-info">학생 관리 <i class="material-icons">assignment</i></a></li>
+                <% } %>
+
+                <% if(sess.username){ %>
+                <li><a href="/board/logout" class="navbar-btn well well-inverse">로그아웃 <i class="material-icons">exit_to_app</i></a></li>
+                <% }else{ %>
+                <li><a type="button" class="navbar-btn well well-inverse" data-toggle="modal" data-target="#member_login">로그인 <i class="material-icons">exit_to_app</i></a></li>
+                <% } %>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="modal fade" id="member_login">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h2 class="modal-title">Member Login</h2>
+            </div>
+
+            <form method="post" action="/board/login">
+                <div class="modal-body">
+                    <!--<fieldset>-->
+                        <div class="form-group label-floating">
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="material-icons">account_circle</i> </span>
+                                <label for="user_id" class="control-label">Username</label>
+                                <input type="text" class="form-control" name="user_id" id="user_id" maxlength="32" required autofocus>
+                            </div>
+                        </div>
+                        <div class="form-group label-floating">
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="material-icons">lock</i> </span>
+                                <label for="user_pw" class="control-label">Password</label>
+                                <input type="password" class="form-control" name="user_pw" id="user_p" maxlength="16" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="togglebutton">
+                                <label>
+                                    <input type="checkbox">
+                                    로그인 유지하기
+                                </label>
+                            </div>
+                        </div>
+                    <!--</fieldset>-->
+                </div>
+                <div class="modal-footer">
+                    <div style="float: left">
+                        <button type="button" class="btn btn-info" data-toggle="modal" data-target="#member_signup">Sign up</button>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Login</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="member_signup" style="background-color: #00bfa5">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h2 class="modal-title">회원가입</h2>
+            </div>
+
+            <form method="post" action="/board/signup" id="form_signup">
+                <div class="modal-body">
+                    <fieldset>
+                        <div class="form-group label-floating">
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="material-icons">account_circle</i> </span>
+                                <label for="user_id" class="control-label">아이디</label>
+                                <input type="text" class="form-control" name="user_id" id="user_id" autofocus>
+                            </div>
+                        </div>
+                        <div class="form-group label-floating">
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="material-icons">lock_outline</i> </span>
+                                <label for="user_pw" class="control-label">비밀번호</label>
+                                <input type="password" class="form-control" name="user_pw" id="user_pw" >
+                            </div>
+                        </div>
+                        <div class="form-group label-floating">
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="material-icons">lock</i> </span>
+                                <label for="user_pw_confirm" class="control-label">비밀번호 확인</label>
+                                <input type="password" class="form-control" name='user_pw_confirm' id="user_pw_confirm" >
+                            </div>
+                        </div>
+                        <div class="form-group label-floating">
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="material-icons">mail</i> </span>
+                                <label for="user_email" class="control-label">이메일</label>
+                                <input type="email" class="form-control" name="user_email" id="user_email" >
+                            </div>
+                        </div>
+                        <div class="form-group label-floating">
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="material-icons">perm_identity</i> </span>
+                                <label for="user_name" class="control-label">이름</label>
+                                <input type="text" class="form-control" name="user_name" id="user_name" >
+                            </div>
+                        </div>
+                        <div class="form-group label-floating">
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="material-icons">vpn_key</i> </span>
+                                <label for="user_hakbun" class="control-label">학번</label>
+                                <input type="number" class="form-control" name="user_hakbun" id="user_hakbun">
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">가입</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">응 아니야</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!--
+
+&lt;!&ndash;Navbar Area&ndash;&gt;
+<body>
+<div class="navbar-fixed">
+    <nav>
+        <div class="nav-wrapper">
+            <a class="brand-logo center" href="/board"><i class="material-icons"></i> 자동채점</a>
+            <a href="#" data-activates="mobile-demo" class="button-collapse">
+                <i class="material-icons">menu</i>
+            </a>
+
+            <ul class="left hide-on-med-and-down">
+                <% if(sess.username){ %>
+                <li><a href="/board/write"><i class="material-icons">edit</i></a></li>
+                <% }else{ %>
+                <li><a href="#member_login" class="waves-effect waves-light modal-trigger"><i class="material-icons">edit</i> 글쓰기</a> </li>
+                <% } %>
+                <li><a href="/board/list"><i class="material-icons">list</i></a></li>
+            </ul>
+
+            <ul class="right hide-on-med-and-down">
+                <% if (sess.perm) {%>
+                <li><a href="/board/member"><i class="material-icons">assignment</i></a></li>
+                <% } %>
+
+                <% if(sess.username){ %>
+                <li><a href="/board/logout"><i class="material-icons">exit_to_app</i></a></li>
+                <% }else{ %>
+                <li><a href="#member_login" class="waves-effect waves-light modal-trigger"><i class="material-icons">exit_to_app</i></a></li>
+                <% } %>
+            </ul>
+
+            <ul class="side-nav" id="mobile-demo">
+                <% if(sess.username){ %>
+                <li><a href="/board/write"><i class="material-icons">edit</i></a></li>
+                <% }else{ %>
+                <li><a href="#member_login" class="waves-effect waves-light modal-trigger"><i class="material-icons">edit</i> 글쓰기</a></li>
+                <% } %>
+                <li><a href="/board/list"><i class="material-icons">list</i></a></li>
+
+                <% if (sess.perm) {%>
+                <li><a href="/board/member"><i class="material-icons">assignment</i></a></li>
+                <% } %>
+
+                <% if(sess.username){ %>
+                <li><a href="/board/logout"><i class="material-icons">exit_to_app</i></a></li>
+                <% }else{ %>
+                <li><a href="#member_login" class="waves-effect waves-light modal-trigger"><i class="material-icons">exit_to_app</i></a></li>
+                <% } %>
+            </ul>
+        </div>
+    </nav>
+</div>
+
+<div class="modal" id="member_login">
+    <div class="modal-content">
+        &lt;!&ndash;<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>&ndash;&gt;
+        <p><h3 class="modal-title">Member Login</h3></p>
+
+        <form method="post" action="/board/login">
+            <div class="input-field">
+                <i class="material-icons prefix">account_circle</i>
+                <input type="text" name="user_id" id="user_id" maxlength="32" required autofocus>
+                <label for="user_id">Username</label>
+            </div>
+            <div class="input-field">
+                <i class="material-icons prefix">lock</i>
+                <input type="password" name="user_pw" id="user_p" maxlength="16" required>
+                <label for="user_pw">Password</label>
+            </div>
+            <div class="switch">
+                <label>
+                    <input type="checkbox">
+                    <span class="lever"></span>
+                    로그인 유지
+                </label>
+            </div>
+
+            <p>
+            <button type="submit" class="btn waves-effect waves-light">Login</button>
+            <button type="button" class="btn modal-close">Close</button>
+            </p>
+        </form>
+
+        <a href="#member_signup" class="right">Sign up</a>
+    </div>
+</div>
+
+<div class="modal" id="member_signup" style="background-color: #00bfa5">
+    <div class="modal-content">
+        <div class="modal-header">
+            <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">&times;</a>
+            <h2 class="modal-title">회원가입</h2>
+        </div>
+
+        <form method="post" action="/board/signup" id="form_signup">
+            &lt;!&ndash;<div class="modal-body">&ndash;&gt;
+                <fieldset>
+                    <div class="form-group label-floating">
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="material-icons">account_circle</i> </span>
+                            <label for="user_id" class="control-label">아이디</label>
+                            <input type="text" class="form-control" name="user_id" id="user_id" autofocus>
+                        </div>
+                    </div>
+                    <div class="form-group label-floating">
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="material-icons">lock_outline</i> </span>
+                            <label for="user_pw" class="control-label">비밀번호</label>
+                            <input type="password" class="form-control" name="user_pw" id="user_pw" >
+                        </div>
+                    </div>
+                    <div class="form-group label-floating">
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="material-icons">lock</i> </span>
+                            <label for="user_pw_confirm" class="control-label">비밀번호 확인</label>
+                            <input type="password" class="form-control" name='user_pw_confirm' id="user_pw_confirm" >
+                        </div>
+                    </div>
+                    <div class="form-group label-floating">
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="material-icons">mail</i> </span>
+                            <label for="user_email" class="control-label">이메일</label>
+                            <input type="email" class="form-control" name="user_email" id="user_email" >
+                        </div>
+                    </div>
+                    <div class="form-group label-floating">
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="material-icons">perm_identity</i> </span>
+                            <label for="user_name" class="control-label">이름</label>
+                            <input type="text" class="form-control" name="user_name" id="user_name" >
+                        </div>
+                    </div>
+                    <div class="form-group label-floating">
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="material-icons">vpn_key</i> </span>
+                            <label for="user_hakbun" class="control-label">학번</label>
+                            <input type="number" class="form-control" name="user_hakbun" id="user_hakbun">
+                        </div>
+                    </div>
+                </fieldset>
+            &lt;!&ndash;</div>&ndash;&gt;
+            <div>
+                <button type="submit" class="btn btn-primary">가입</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">응 아니야</button>
+            </div>
+        </form>
+    </div>
+
+</div>
+-->
+
+
+<%- body %>
+
+<script>
+    $(document).ready(function () {
+        $(function () {
+            jQuery.validator.addMethod("alphanumeric", function(value, element) {
+                return this.optional(element) || /^[a-zA-Z0-9가-힣]+$/.test(value);
+            });
+
+            $('#form_signup').validate({
+                rules: {
+                    user_id: {
+                        required: true,
+                        minlength: 6,
+                        remote: {type: 'post', url: '/board/check'},
+                        alphanumeric: true
+                    },
+                    user_pw: {
+                        required: true,
+                        minlength: 6
+                    },
+                    user_pw_confirm: {
+                        equalTo: "#user_pw",
+                    },
+                    user_email: {
+                        required: true,
+                        email: true
+                    },
+                    user_name: {
+                        required: true,
+                        alphanumeric: true
+                    },
+                    user_hakbun: {
+                        required: true,
+                        digits: true,
+                        minlength: 10,
+                        maxlength: 10,
+                        remote: {type: 'post', url: '/board/check'}
+                    }
+                },
+                messages:{
+                    user_id: {
+                        required: "아이디를 입력하세요.",
+                        minlength: $.validator.format("아이디는 {0} 자 이상 입력하세요."),
+                        remote: "이미 존재하는 아이디입니다.",
+                        alphanumeric: "한글/영어/숫자만 입력하세요."
+                    },
+                    user_pw: {
+                        required: "암호를 입력하세요.",
+                        minlength: $.validator.format("비밀번호는 {0} 자 이상 입력하세요.")
+                    },
+                    user_pw_confirm: {
+                        equalTo: "암호가 일치하지 않습니다."
+                    },
+                    user_email: {
+                        required: "이메일을 입력하세요.",
+                        email: "올바른 이메일 형식이 아닙니다."
+                    },
+                    user_name: {
+                        required: "이름을 입력하세요.",
+                        alphanumeric: "한글/영어/숫자만 입력하세요."
+                    },
+                    user_hakbun: {
+                        required: "학번을 입력하세요.",
+                        digits: "학번을 쓰세요 제발",
+                        minlength: $.validator.format("학번은 {0} 자리를 입력해주세요."),
+                        maxlength: $.validator.format("학번은 {0} 자리를 입력해주세요."),
+                        remote: "이미 가입된 학번입니다."
+                    }
+                }
+            });
+
+        });
+    });
+</script>
+
+</body>
+
+<!-- Materialized CSS -->
+<!--<script type="text/javascript" src="/js/materialize.min.js"></script>-->
+
+<!-- Twitter Bootstrap -->
+<script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/js/bootstrap.min.js"></script>
+
+<!-- Material Design for Bootstrap -->
+<script src="/js/material.min.js"></script>
+<script src="/js/ripples.min.js"></script>
+
+<!-- Sliders -->
+<!--<script src="//cdnjs.cloudflare.com/ajax/libs/noUiSlider/6.2.0/jquery.nouislider.min.js"></script>-->
+
+<!--Highlight.js-->
+<!--<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.6.0/highlight.min.js"></script>-->
+
+<!-- Latest compiled and minified JavaScript -->
+<!--<script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.10.0/js/bootstrap-select.min.js"></script>-->
+
+<!-- Angular Material requires Angular.js Libraries -->
+<!--<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular.min.js"></script>-->
+<!--<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-animate.min.js"></script>-->
+<!--<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-aria.min.js"></script>-->
+<!--<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-messages.min.js"></script>-->
+<!--<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular-route.js"></script>-->
+
+<!-- Angular Material Library -->
+<!--<script src="//ajax.googleapis.com/ajax/libs/angular_material/1.1.0/angular-material.min.js"></script>-->
+
+<script>
+    //  Bootstrap-Materialized Init.
+    $.material.init();
+</script>

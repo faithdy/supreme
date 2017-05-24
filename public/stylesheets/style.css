@@ -1,0 +1,29 @@
+th {
+    /*background-color: #efefef;*/
+    background-color: #009688;
+    color: #fff;
+}
+
+hr {
+    border-style: dashed;
+    margin-top: 100px;
+    margin-bottom: 100px;
+}
+
+.panel{
+    margin:4%;
+}
+
+.panel-body{
+    padding:3%;
+}
+
+.navbar .navbar-nav {
+    display: inline-block;
+    float: none;
+    vertical-align: middle;
+}
+
+.navbar .navbar-collapse {
+    text-align: center;
+}

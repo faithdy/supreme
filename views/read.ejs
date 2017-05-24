@@ -1,0 +1,182 @@
+<% layout('header') -%>
+
+<div class="container">
+    <div class="row">
+        <div class="jumbotron">
+            <div class="page-header">
+                <h1><%=data.subject%></h1>
+            </div>
+            <table class="table table-hover">
+                <tr class="row">
+                    <th class="col-md-2" style="vertical-align: middle;"><h4>제출기한</h4></th>
+                    <td class="col-md-10"><h3><%=data.date%></h3></td>
+                </tr>
+                <tr class="row">
+                    <th class="col-md-2" style="vertical-align: middle;"><h4>내용</h4></th>
+                    <td class="col-md-10"><p><%=data.content%></p></td>
+                </tr>
+                <tr class="row">
+                    <th class="col-md-2" style="vertical-align: middle;"><h4>제출양식</h4></th>
+                    <td class="col-md-10"><span class="badge"><h4><%=data.submit_form%></h4></span></td>
+                </tr>
+                <tr class="row">
+                    <th class="col-md-2" style="vertical-align: middle;"><h4>첨부파일</h4></th>
+                    <td class="col-md-10">
+                        <% if(data.attachment) {%>
+                        <h4><a href="/board/download/<%=data.idx%>"><%=data.attachment%></a></h4>
+                        <% }else if(sess.perm){ %>
+                        <form action="/board/upload/<%=data.idx%>/<%=data.title%>" method="post" enctype="multipart/form-data">
+                            <div class="form-group form-group-lg label-floating">
+                                <div class="input-group">
+                                    <span class="input-group-addon"><i class="material-icons">attachment</i> </span>
+                                    <label for="attachment" class="control-label">첨부파일</label>
+                                    <input type='file' name='attachment' id="attachment" class="form-control" accept=".tar.gz" required>
+
+                                    <input type="text" readonly="" class="form-control">
+                                    <span class="input-group-btn input-group-sm">
+                                      <button type="button" class="btn btn-fab btn-fab-mini btn-danger">
+                                        <i class="material-icons">attach_file</i>
+                                      </button>
+                                    </span>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-raised btn-block btn-inverse">업로드</button>
+                        </form>
+                        <% } %>
+                    </td>
+                </tr>
+                <tr class="row">
+                    <th class="col-md-2"><h4>작성자</h4></th>
+                    <td class="col-md-10" style="vertical-align: middle;"><label class="label label-success"><%=data.writer%></label></td>
+                </tr>
+                <% if(!sess.perm) {%>
+                <tr class="row">
+                    <th class="col-md-2">
+                        <%if(submit){%>
+                            제출 완료
+                            <i class="material-icons">assignment_turned_in</i>
+                        <%}else{%>
+                            미제출
+                            <i class="material-icons">assignment_late</i>
+                        <%}%>
+                    </th>
+                    <td class="col-md-10">
+                        <form action="/board/upload/<%=data.idx%>/<%=data.title%>" method="post" enctype="multipart/form-data">
+                            <div class="form-group form-group-lg label-floating">
+                                <div class="input-group">
+                                    <span class="input-group-addon"><i class="material-icons">attachment</i> </span>
+                                    <label for="attachment" class="control-label">첨부파일</label>
+                                    <input type='file' name='attachment' id="attachment" class="form-control" accept=".tar.gz" required>
+
+                                    <input type="text" readonly="" class="form-control">
+                                    <span class="input-group-btn input-group-sm">
+                                      <button type="button" class="btn btn-fab btn-fab-mini btn-danger">
+                                        <i class="material-icons">attach_file</i>
+                                      </button>
+                                    </span>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-raised btn-block btn-inverse">제출</button>
+                        </form>
+                    </td>
+                </tr>
+                <% } %>
+            </table>
+            <a href="/board/list" class="btn btn-lg btn-info btn-raised">목록 <i class="material-icons">list</i></a>
+            <div style="float: right;">
+                <% if(sess.perm) { %>
+                <a href="/board/assignment/<%= data.idx %>" class="btn btn-lg btn-inverse btn-raised"><i class="material-icons">assignment</i> 과제 점수 관리</a>
+                <% } else { %>
+                <button class="btn btn-raised btn-success" data-toggle="modal" data-target="#check_assignment"><i class="material-icons">edit</i> 점수 확인</button>
+                <% } %>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade " id="check_assignment">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h1 class="modal-title"><%= sess.name %> 님의 과제 채점 결과</h1>
+            </div>
+            <div class="modal-body">
+                <div id="imustvecalledathousandtimes">
+                    <div class="panel panel-danger">
+                        <div class="panel-heading">
+                            <h3>Assertion result</h3>
+                        </div>
+                        <div class="panel-body">
+                            <table class="table table-inverse" id="table_result">
+                                <tr>
+                                    <th>Message</th>
+                                    <th>Testcase</th>
+                                    <th>Testsuite</th>
+                                    <th>Score</th>
+                                </tr>
+                            </table>
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">닫기</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function() {
+        var data = <%- JSON.stringify(result) %>;
+        var score = 0;
+
+        if(data.assert != null) {
+            for (var i = 0; i < data.assert.length; i++) {
+                var row = "<tr><td>";
+
+                row += data.assert[i]['Message'] + "</td>";
+                row += "<td>" + data.assert[i]['Testcase'] + "</td>";
+                row += "<td>" + data.assert[i]['Testsuite'] + "</td>";
+                row += "<td>- " + data.assert[i]['Score'] + "</td></tr>"
+
+                score += Number(data.assert[i]['Score']);
+
+                console.log(row);
+                $('#table_result').append(row);
+            }
+        }
+
+        $(document).on('click', '#hellofromtheotherside', function (e) {
+            /*
+            jQuery.ajax({
+                type:"POST",
+                url:"/board/assignment",
+                dataType:"JSON",
+                success : function(data) {
+                    var score = 0;
+
+                    for(var i = 0; i < data.assert.length; i++){
+
+                    }
+                },
+                complete : function(data) {
+
+                },
+                error : function(xhr, status, error) {
+
+                    alert(error);
+
+                }
+            });
+            */
+        });
+    });
+</script>
+
+
+<style>
+    th {
+        height:100%;
+        text-align: center;
+    }
+</style>

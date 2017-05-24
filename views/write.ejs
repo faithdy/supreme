@@ -1,0 +1,374 @@
+<%- layout('header') %>
+
+<div class="container">
+    <div class="page-header">
+        <h1>Write</h1>
+    </div>
+    <form action='/board/write' method="post">
+        <!---------------------------->
+        <!--Google-Test making start-->
+        <!---------------------------->
+        <div class="jumbotron">
+            <div class="page-header">
+                <h1>Setup</h1>
+            </div>
+
+            <!--Setup init-->
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h2 class="panel-title">Init</h2>
+                </div>
+
+                <div class="panel-body">
+                    <div class="row">
+                        <!--Title-->
+                        <div class="form-group form-group-lg label-floating col-md-6">
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="material-icons">edit</i> </span>
+                                <label for="title" class="control-label">Title</label>
+                                <input type='text' name='title' id="title" class="form-control" required>
+                                <span class="help-block">Please input the Title..</span>
+                            </div>
+                        </div>
+                        <!--Unit test-->
+                        <div class="form-group form-group-lg label-floating col-md-6">
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="material-icons">title</i> </span>
+                                <label for="unittest" class="control-label">Unit Test</label>
+                                <input type='text' name='unittest' id='unittest' class="form-control" required>
+                                <span class="help-block">Please input the Unit test..</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!--Classes-->
+                <div class="panel-body">
+                    <div class="form-group label-floating row" id="dynamicInput_class">
+                        <div class="pull-left center-block col-md-4 col-sm-6 input-group" style="margin-bottom: 5%;">
+                            <div class="col-lg-6 col-md-6 col-sm-6">
+                                <label for="0" class="control-label">Class</label>
+                                <input type='text' name='classes[]' id="0" class='form-control' required>
+                                <span class="help-block">Please input the class(es)</span>
+                            </div>
+                            <div class="col-lg-6 col-md-6 col-sm-6">
+                                <button type="button" id="add_class" class="btn btn-fab btn-primary">
+                                    <i class="material-icons">add</i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!--Setup code-->
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    <h2 class="panel-title">Code</h2>
+                </div>
+                <div class="panel-body">
+                    <div class="form-group form-group-lg label-floating">
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="material-icons">polymer</i> </span>
+                            <label for="unittest" class="control-label">Setup Code</label>
+                            <textarea class="form-control" rows="10" name='setupcode' required></textarea>
+                            <span class="help-block">Please input the setup code..</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!--Setup table-->
+            <div class="panel panel-inverse">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Test</h3>
+                </div>
+                <!--<div class="panel-body">-->
+                    <table class="table table-bordered table-striped table-hover form-group table-responsive" style="margin-top: 0;">
+                        <thead>
+                            <tr>
+                                <th>Group</th>
+                                <th>Function</th>
+                                <th>Object</th>
+                                <th>Helper</th>
+                                <th>Input</th>
+                                <th>Output Type</th>
+                                <th>Output</th>
+                                <th>Test</th>
+                                <th>Score</th>
+                            </tr>
+                        </thead>
+                        <tbody id="dynamicInput_group">
+                            <tr id="1">
+                                <td class="col-md-2">
+                                    <div class="input-group">
+                                        <input type='text' name='groups[]' class='form-control' placeholder="Group 1" required>
+                                    </div>
+                                </td>
+                                <td class="col-md-2">
+                                    <div class="input-group">
+                                        <input type='text'	name='functions[]' class='form-control' placeholder="Function 1" required>
+                                        <span class="input-group-btn">
+                                        <button type="button" class="btn btn-fab btn-fab-mini" id="add_func">
+                                            <i class="material-icons">add</i>
+                                        </button>
+                                    </span>
+                                    </div>
+                                </td>
+                                <td class="col-md-1">
+                                    <div class="input-group">
+                                        <input type='text' name='objects[]' class='form-control' placeholder="Object" required>
+                                    </div>
+                                </td>
+                                <td class="col-md-1">
+                                    <div class="input-group" id="mod">
+                                        <input type='text' name='helpers[]' class='form-control' placeholder="Helper" disabled>
+                                    </div>
+                                </td>
+                                <td class="col-md-2">
+                                    <div class="input-group" id="mod">
+                                        <input type='text' name='inputs[]' class='form-control' placeholder="Input 1" disabled>
+                                        <span class="input-group-btn">
+                                        <button type="button" class="btn btn-fab btn-fab-mini" id="add_input" disabled>
+                                            <i class="material-icons">add</i>
+                                        </button>
+                                    </span>
+                                    </div>
+                                </td>
+                                <td class="col-md-1">
+                                    <div class="input-group">
+                                        <input type='text' name='outputs_type[]' class='form-control' placeholder="Output type 1" required>
+                                    </div>
+                                </td>
+                                <td class="col-md-1">
+                                    <div class="input-group">
+                                        <input type='text' name='outputs[]' class='form-control' placeholder="Output 1" required>
+                                    </div>
+                                </td>
+                                <td class="col-md-1">
+                                    <div class="input-group">
+                                        <select class="selectpicker form-control" name="tests[]" required>
+                                            <option value="O" data-icon='glyphicon-ok'></option>
+                                            <option value="X" data-icon='glyphicon-remove'></option>
+                                        </select>
+                                    </div>
+                                </td>
+                                <td class="col-md-1">
+                                    <div class="input-group">
+                                        <input type='number' name='score[]' class='form-control' placeholder="Score 1" required>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <!--Add more group-->
+                    <div class="form-group" style="padding-bottom: 0px;">
+                        <button type="button" id="add_group" class="btn btn-inverse btn-block btn-raised well">
+                            <i class="material-icons">add</i>
+                        </button>
+                    </div>
+                <!--</div>-->
+            </div>
+        </div>
+        <!-------------------------->
+        <!--Google-Test making end-->
+        <!-------------------------->
+
+
+        <!---------------------------->
+        <!--Assignment posting start-->
+        <!---------------------------->
+        <div class="jumbotron">
+            <div class="page-header">
+                <h1>Posting</h1>
+            </div>
+            <div class="panel panel-warning">
+                <div class="panel-heading">
+                    <h3 class="panel-title">글쓰기</h3>
+                </div>
+                <div class="panel-body">
+                    <div class="form-group form-group-lg label-floating">
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="material-icons">edit</i> </span>
+                            <label for="subject" class="control-label">제목</label>
+                            <input type='text' name='subject' id="subject" class="form-control" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group form-group-lg label-floating">
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="material-icons">alarm</i> </span>
+                            <label for="date" class="control-label">제출기한</label>
+                            <input type="text" name="date" class="form-control" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group form-group-lg label-floating">
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="material-icons">chat</i> </span>
+                            <label for="content" class="control-label">내용 / 주의사항</label>
+                            <textarea class="form-control" rows="10" name='content' required></textarea>
+                        </div>
+                    </div>
+
+                    <div class="form-group form-group-lg label-floating">
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="material-icons">flag</i> </span>
+                            <label for="submit_form" class="control-label">제출양식</label>
+                            <input type='text' name='submit_form' id="submit_form" value="tar.gz" class="form-control" required>
+                        </div>
+                    </div>
+
+                    <!--
+                    <div class="form-group form-group-lg label-floating">
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="material-icons">attachment</i> </span>
+                            <label for="attachment" class="control-label">첨부파일</label>
+                            <input type='file' name='attachment' id="attachment" class="form-control">
+
+                            <input type="text" readonly="" class="form-control">
+                            <span class="input-group-btn input-group-sm">
+                              <button type="button" class="btn btn-fab btn-fab-mini btn-danger">
+                                <i class="material-icons">attach_file</i>
+                              </button>
+                            </span>
+                        </div>
+                    </div>
+                    -->
+                </div>
+            </div>
+        </div>
+        <!-------------------------->
+        <!--Assignment posting end-->
+        <!-------------------------->
+
+        <!--Submit-->
+        <!--<hr style="border-color: deeppink;">-->
+        <div class="form-group" style="">
+            <button type="submit" class="btn btn-success btn-fab btn-block well">
+                <i class="material-icons">send</i>
+            </button>
+        </div>
+    </form>
+</div>
+
+
+
+
+
+
+<!--Moment.js-->
+<script type="text/javascript" src="//cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+
+<!-- Date Range Picker -->
+<script type="text/javascript" src="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.js"></script>
+
+<!--jQuery Script-->
+<script>
+//  jQuery Script - Add input fields dynamically.
+    $(document).ready(function () {
+        var idx_class = 1;
+        var idx_group = 1;
+        var idx_func = 1;
+        var idx_io =  1;
+        var idx_scr = idx_func;
+
+        $('#add_class').click(function () {
+            $('#dynamicInput_class').append(
+                    "<div id='"+idx_class+"' class='pull-left center-block col-md-4 col-sm-6' style='margin-bottom: 5%'>" +
+                    "<div class='col-md-6 col-lg-6 col-sm-6'>" +
+                    "<input type='text' id='"+idx_class+"' placeholder='Class' name='classes[]' class='form-control'></div>" +
+                    "<div class='col-md-6 col-lg-6 col-sm-6'>" +
+                    "<button type='button' id='"+idx_class+"' class='btn btn-danger btn-fab btn_remove'><i class='material-icons'>remove</i> </button></div></div>"
+            );
+            idx_class++;
+        });
+
+        $(document).on('click', '#add_group', function(e){
+            idx_group++;
+            idx_func = 1;
+            idx_io = 1;
+            idx_scr = idx_func;
+
+            var replacements = {"%GROUP%":idx_group,"%FUNC%":idx_func, "%SCR%":idx_scr, "%IO%":idx_io};
+            var group = "<tr> <td> <div class='input-group'> <input type='text' name='groups[]' class='form-control' placeholder='Group %GROUP%'> </div> </td> <td> <div class='input-group'> <input type='text' name='functions[]' class='form-control' placeholder='Function %FUNC%'> <span class='input-group-btn'> <button type='button' class='btn btn-fab btn-fab-mini' id='add_func'> <i class='material-icons'>add</i> </button> </span> </div> </td> <td> <div class='input-group'> <input type='text' name='objects[]' class='form-control' placeholder='Object'> </div> </td> <td> <div class='input-group'> <input type='text' name='helpers[]' class='form-control' placeholder='Helper'> </div> </td> <td> <div class='input-group' id='mod'> <input type='text' name='inputs[]' class='form-control' placeholder='Input %IO%' disabled> <span class='input-group-btn'> <button type='button' class='btn btn-fab btn-fab-mini' id='add_input' disabled> <i class='material-icons'>add</i> </button> </span> </div> </td><td> <div class='input-group'> <input type='text' name='outputs_type[]' class='form-control'  placeholder='Output type %IO%'> </div> </td> <td> <div class='input-group'> <input type='text' name='outputs[]' class='form-control'  placeholder='Output %IO%'> </div> </td> <td> <div class='input-group'> <select class='selectpicker form-control' name='tests[]'> <option value='O' data-icon='glyphicon-ok'></option> <option value='X' data-icon='glyphicon-remove'></option> </select> </div> </td> <td> <div class='input-group'> <input type='text' name='score[]' class='form-control' placeholder='Score %SCR%' required> </div> </td> </tr>";
+            group = group.replace(/%\w+%/g, function(all) {
+                return replacements[all] || all;
+            });
+
+            $('#dynamicInput_group').append(group);
+            $('.selectpicker').selectpicker('refresh');
+        });
+
+        $(document).on('click', '#add_func', function (e) {
+            idx_func++;
+            idx_scr = idx_func;
+            idx_io = 1;
+
+            var replacements = {"%FUNC%":idx_func,"%IO%":idx_io, "%SCR%":idx_scr};
+            var func = "<tr> <td> <div class='input-group'> </div> </td> <td> <div class='input-group'> <input type='text'	name='functions[]' class='form-control' placeholder='Function %FUNC%'> </div> </td> <td> <div class='input-group'> <input type='text' name='objects[]' class='form-control' placeholder='Object'> </div> </td> <td> <div class='input-group'> <input type='text' name='helpers[]' class='form-control' placeholder='Helper'> </div> </td> <td> <div class='input-group' id='mod'> <input type='text' name='inputs[]' class='form-control' placeholder='Input %IO%' disabled> <span class='input-group-btn'> <button type='button' class='btn btn-fab btn-fab-mini' id='add_input' disabled> <i class='material-icons'>add</i> </button> </span> </div> </td><td> <div class='input-group'> <input type='text' name='outputs_type[]' class='form-control'  placeholder='Output type %IO%'> </div> </td>  <td> <div class='input-group'> <input type='text' name='outputs[]' class='form-control' placeholder='Output %IO%'> </div> </td> <td> <div class='input-group'> <select class='selectpicker form-control' name='tests[]'> <option value='O' data-icon='glyphicon-ok'></option> <option value='X' data-icon='glyphicon-remove'></option> </select> </div> </td> <td> <div class='input-group'> <input type='text' name='score[]' class='form-control' placeholder='Score %SCR%' required> </div> </td> </tr>";
+            func = func.replace(/%\w+%/g, function(all) {
+                return replacements[all] || all;
+            });
+
+            $('#dynamicInput_group').append(func);
+
+            $('.selectpicker').selectpicker('refresh');     // TD:Test select option init.
+        })
+
+        $(document).on('click', '#mod', function (e) {
+            console.log($('this'));
+            $('#mod input, #mod span button').removeAttr('disabled');
+        });
+
+        $(document).on('click', '#add_input', function (e) {
+            idx_io++;
+
+            var inputTDtag = $(this).parent().parent().parent();
+            var ioTypeTDtag = inputTDtag.next();
+            var outputTDtag = ioTypeTDtag.next();
+            var testTDtag = outputTDtag.next();
+
+            var replacements = {"%FUNC%":idx_func,"%IO%":idx_io};
+
+            var inputTag = "<div class='input-group'> <input type='text' name='inputs[]' class='form-control' placeholder='Input %IO%' '> </div>";
+            inputTag = inputTag.replace(/%\w+%/g, function(all) {
+                return replacements[all] || all;
+            });
+            var outputTag = "<div class='input-group'><input type='text' name='outputs[]' class='form-control' placeholder='Output %IO%'></div>";
+            outputTag = outputTag.replace(/%\w+%/g, function(all) {
+                return replacements[all] || all;
+            });
+            var ioTypeTag = "<div class='input-group'> <input type='text' name='outputs_type[]' class='form-control'  placeholder='Output type %IO%'> </div>";
+            ioTypeTag = ioTypeTag.replace(/%Ww+%/g, function (all) {
+                return replacements[all] || all;
+            })
+
+            inputTDtag.append(inputTag);
+            outputTDtag.append(outputTag);
+            ioTypeTDtag.append(ioTypeTag);
+            testTDtag.append("<div class='input-group'><select class='selectpicker form-control' name='tests[]'> <option value='O' data-icon='glyphicon-ok'></option> <option value='X' data-icon='glyphicon-remove'></option> </select> </div>");
+
+            $('.selectpicker').selectpicker('refresh');     // TD:Test select option init.
+        });
+
+        $(document).on('click', '.btn_remove', function (e) {
+            var btn_id = this.id;
+            $('#'+btn_id).remove();
+        })
+    });
+
+    $(function() {
+        $('input[name="date"]').daterangepicker({
+            applyClass: "btn btn-success btn-raised",
+            cancelClass: "btn btn-default btn-raised",
+            autoApply: true,
+            timePicker: true,
+            timePickerIncrement: 30,
+            locale: {
+                format: 'YYYY.MM.DD A h:mm'
+            }
+        });
+    });
+</script>
